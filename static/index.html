@@ -98,65 +98,8 @@
 
     <script type="module">
       import {
-        getRandomSymbol,
-        updateBalanceDisplay,
-        evaluate,
-        state,
-        reels
+        spin
       } from "./slots.js";
-
-      const message = document.getElementById("message");
-      const coinDisplay = document.getElementById("coins");
-      const spinBtn = document.getElementById("spinBtn");
-
-      let isSpinning = false;
-
-      function spin() {
-        if (isSpinning) return;
-
-        const bet = parseInt(document.getElementById("bet").value);
-        if (isNaN(bet) || bet < 1) {
-          alert("Enter a valid bet amount.");
-          return;
-        }
-
-        if (bet > state.balance) {
-          alert("Not enough coins!");
-          return;
-        }
-
-        isSpinning = true;
-        spinBtn.disabled = true;
-        message.textContent = "";
-        reels.forEach((reel) => reel.classList.remove("highlight"));
-
-        state.balance -= bet;
-        updateBalanceDisplay();
-
-        let finalSymbols = [];
-
-        reels.forEach((reel, index) => {
-          let spins = 10 + index * 5;
-          let i = 0;
-
-          const spinInterval = setInterval(() => {
-            reel.textContent = getRandomSymbol();
-            i++;
-            if (i >= spins) {
-              clearInterval(spinInterval);
-              finalSymbols[index] = reel.textContent;
-
-              if (finalSymbols.filter(Boolean).length === 3) {
-                evaluate(finalSymbols, bet);
-                isSpinning = false;
-                setTimeout(() => {
-                  spinBtn.disabled = false;
-                }, 1500); // Cooldown after spin
-              }
-            }
-          }, 100);
-        });
-      }
 
       document.getElementById("spinBtn").addEventListener("click", spin);
     </script>

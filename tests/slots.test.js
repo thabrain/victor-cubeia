@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { evaluate, state, reels, getRandomSymbol, symbols } from "../static/slots.js";
+import { describe, it, expect, beforeEach, vitest } from "vitest";
+import { evaluate, state, reels, getRandomSymbol, symbols, spin } from "../static/slots.js";
 
 describe("Slots", () => {
   beforeEach(() => {
@@ -54,8 +54,28 @@ describe("Slots", () => {
     });
   });
 
-  it("should get a random symbol from the symbol list", () => {
+  it("should get a random symbol from the symbols list", () => {
     let s = getRandomSymbol();
     expect(symbols.includes(s))
+  });
+
+  it("should render an alert message when stake is below 1", () => {
+    document.body.innerHTML = `
+      <input id="bet" value="0" />
+    `;
+    
+    window.alert = vitest.fn();
+    spin();
+    expect(window.alert).toHaveBeenCalledOnce();
+  });
+
+  it("should render an alert message when having not enough coins", () => {
+    document.body.innerHTML = `
+      <input id="bet" value="10000" />
+    `;
+    
+    window.alert = vitest.fn();
+    spin();
+    expect(window.alert).toHaveBeenCalledOnce();
   });
 });
